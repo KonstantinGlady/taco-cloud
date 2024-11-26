@@ -2,6 +2,7 @@ package tacos.web;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -9,10 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import tacos.Ingredient;
 import tacos.Taco;
 import tacos.TacoOrder;
+import tacos.data.IngredientRepository;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static tacos.Ingredient.*;
 import static tacos.Ingredient.Type.*;
@@ -23,22 +26,17 @@ import static tacos.Ingredient.Type.*;
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
 
+    private final IngredientRepository ingredientRepo;
+
+    @Autowired
+    public DesignTacoController(IngredientRepository ingredientRepo) {
+        this.ingredientRepo = ingredientRepo;
+    }
+
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
 
-        List<Ingredient> ingredients = Arrays.asList(
-                new Ingredient("FLTO", "Flour Tortilla", WRAP),
-                new Ingredient("COTO", "Corn Tortilla", WRAP),
-                new Ingredient("GRBF", "Ground Beef", PROTEIN),
-                new Ingredient("CARN", "Carnitas", PROTEIN),
-                new Ingredient("TMTO", "Diced Tomatoes", VEGGIES),
-                new Ingredient("LETC", "Lettuce", VEGGIES),
-                new Ingredient("CHED", "Cheddar", CHEESE),
-                new Ingredient("JACK", "Monterrey Jack", CHEESE),
-                new Ingredient("SLSA", "Salsa", SAUCE),
-                new Ingredient("SRCR", "Sour Cream", SAUCE)
-        );
-
+        Iterable<Ingredient> ingredients = ingredientRepo.findAll();
         Type[] types = Type.values();
 
         for (Type type : types) {
@@ -74,8 +72,8 @@ public class DesignTacoController {
         return "redirect:/orders/current";
     }
 
-    private Iterable<Ingredient> filterByType(List<Ingredient> ingredients, Type type) {
-        return ingredients.stream()
+    private Iterable<Ingredient> filterByType(Iterable<Ingredient> ingredients, Type type) {
+        return StreamSupport.stream(ingredients.spliterator(), false)
                 .filter(x -> x.getType().equals(type))
                 .collect(Collectors.toList());
     }
