@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,13 +16,14 @@ import java.util.Date;
 import java.util.List;
 
 @Data
+@Table
 public class TacoOrder implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    @NotNull
+    @Id
     private long id;
-    private Date placedAt;
+    private Date placedAt = new Date();
     @NotBlank(message = "Name is required")
     private String deliveryName;
     @NotBlank(message = "Street is required")
@@ -33,7 +36,7 @@ public class TacoOrder implements Serializable {
     private String deliveryZip;
     //@CreditCardNumber(message = "Credit card number is not valid")
     private String ccNumber;
-    //@Pattern(regexp = "^(0[1-9]|1[0-2])(/)([2-9][0-9])$")
+    @Pattern(regexp = "^(0[1-9]|1[0-2])(/)([2-9][0-9])$")
     private String ccExpiration;
     @Digits(integer = 3, fraction = 0, message = "CVV is invalid")
     private String ccCVV;
