@@ -1,4 +1,6 @@
 spring:
   datasource:
     generate-unique-name: false
-    name: tacocloud
+    name: tacocloud;NON_KEYWORDS=user
+
+
