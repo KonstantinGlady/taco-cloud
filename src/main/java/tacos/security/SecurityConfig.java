@@ -13,7 +13,7 @@ import tacos.User;
 import tacos.data.UserRepository;
 
 @Configuration
-public class SecurityConf {
+public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -34,12 +34,12 @@ public class SecurityConf {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(request -> request
-                        .requestMatchers("/design","/orders").hasRole("USER")
-                        .requestMatchers("/", "/**").permitAll()
-                ).formLogin(form -> form
-                        .loginPage("/login")
-                )
+        return http
+                .authorizeHttpRequests(aut -> aut
+                        .requestMatchers("/orders","/design").hasRole("USER")
+                        .anyRequest().permitAll())
+                .formLogin(form -> form
+                        .loginPage("/login"))
                 .build();
     }
 
