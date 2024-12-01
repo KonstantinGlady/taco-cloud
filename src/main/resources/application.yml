@@ -3,4 +3,8 @@ spring:
     generate-unique-name: false
     name: tacocloud;NON_KEYWORDS=user
 
+taco:
+  orders:
+    pageSize: 10
+
 

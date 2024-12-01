@@ -25,7 +25,7 @@ public class TacoOrder implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Date placedAt = new Date();
+    private Date placedAt;
 
     @ManyToOne
     private User user;
@@ -51,13 +51,18 @@ public class TacoOrder implements Serializable {
     //@Pattern(regexp = "^(0[1-9]|1[0-2])(/)([2-9][0-9])$")
     private String ccExpiration;
 
-   // @Digits(integer = 3, fraction = 0, message = "CVV is invalid")
+    // @Digits(integer = 3, fraction = 0, message = "CVV is invalid")
     private String ccCVV;
 
-    @ManyToMany(targetEntity=Taco.class) //@OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = Taco.class) //@OneToMany(cascade = CascadeType.ALL)
     private List<Taco> tacos = new ArrayList<>();
 
     public void addTaco(Taco taco) {
         tacos.add(taco);
+    }
+
+    @PrePersist
+    void placedAt() {
+        this.placedAt = new Date();
     }
 }
