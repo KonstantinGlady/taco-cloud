@@ -2,7 +2,9 @@ spring:
   datasource:
     generate-unique-name: false
     name: tacocloud;NON_KEYWORDS=user
-
+  data:
+    rest:
+      base-path: /data-api
 taco:
   orders:
     pageSize: 10
